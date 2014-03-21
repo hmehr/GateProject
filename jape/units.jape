@@ -1,0 +1,37 @@
+Phase: units
+Input: Token Lookup
+Options: control = appelt
+
+//Department of Computer Science
+
+Rule: Department1
+(
+	({Token.string ==~ "(?i)Department"})
+	({Token.string == "of"})
+	({Lookup.minorType == department})
+):dep1
+
+-->
+:dep1.UniversityUnit = {name=:dep1@string}
+
+//Faculty of Arts
+Rule:Faculty1
+(
+	({Token.string ==~ "(?i)Faculty"})
+	({Token.string == "of"})
+	({Lookup.minorType == faculty})
+):fac1
+
+-->
+:fac1.UniversityUnit = {name=:fac1@string}
+
+//School of Graduate Studies
+Rule:School1
+(
+	({Token.string ==~ "(?i)School"})
+	({Token.string == "of"})
+	({Lookup.minorType == school})
+):school1
+
+-->
+:school1.UniversityUnit = {name=:school1@string}

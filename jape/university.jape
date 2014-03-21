@@ -1,0 +1,85 @@
+
+Phase: University
+Input: Token Lookup
+Options: control = appelt
+
+//University of Chicago
+Rule: UniversityName1
+(
+	({Token.string == "(?i)University"}):uniKey
+	{Token.string == "of"}
+	({Lookup.minorType == city}):cityName
+):orgName
+-->
+:cityName.location = {kind=city},
+:orgName.University = { universityName=:orgName@string,firedBy="Rule1"}
+
+
+
+Rule: UniversityName2
+
+//University of Washington
+
+(
+	({Token.string == "(?i)University"}):uniKey
+	{Token.string == "of"}
+	({Lookup.minorType == province}) : provinceName
+):orgName
+-->
+:provinceName.location = {kind=province},
+:orgName.University = { universityName=:orgName@string,firedBy="Rule2"}
+
+
+Rule: UniversityName3
+//New York University
+(
+	({Token.string == city}):cityName
+	({Token.string == "University"}):uniKey
+):orgName
+-->
+:cityName.location = {kind=city},
+:orgName.University = { universityName=:orgName@string,firedBy="Rule3"}
+
+Rule: UniversityName4
+//Michigan State University
+(
+	({Token.string == province}):provinceName
+	{Token.string == "(?i)state"}
+	({Token.string == "(?i)University"}):uniKey
+):orgName
+-->
+:provinceName.location = {kind=province},
+:orgName.University = { universityName=:orgName@string,firedBy="Rule4"}
+
+
+
+Rule: UniversityName5
+//National Taiwan University
+(
+	({Token.string == "(?i)National"})
+	({Token.string == country}):countryName
+	({Token.string == "(?i)University"}):uniKey
+):orgName
+-->
+:countryName.location = {kind=country},
+:orgName.University = { universityName=:orgName@string,firedBy="Rule5"}
+
+
+Rule: UniversityName6
+//Massachusetts Institute of Technology
+(
+	({Token.string == province}):provinceName
+	({Token.string == "(?i)Institute"})
+	{Token.string == "of"}
+	({Token.string == "(?i)Technology"}):uniKey
+):orgName
+-->
+:provinceName.location = {kind=province},
+:orgName.University = { universityName=:orgName@string,firedBy="Rule6"}
+
+Rule: UniversityName7
+(
+	({Lookup.minorType == university}):unikey
+):rul1
+-->
+:rul1.University = { universityName=:unikey@string,firedBy="Rule7"}

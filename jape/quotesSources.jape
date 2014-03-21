@@ -1,0 +1,28 @@
+Phase: QuoteSources
+
+Input: Token Lookup Person ReportedSpeech RVG UniversityUnit Position University
+Options: control = appelt
+
+Rule: QuiteSources1
+(
+	{ReportedSpeech}
+):rule1
+-->
+{
+	gate.AnnotationSet rsAnnot= (gate.AnnotationSet)bindings.get("rule1");
+	gate.Annotation rsAnn= (gate.Annotation)rsAnnot.iterator().next();
+	gate.FeatureMap features = Factory.newFeatureMap();
+	
+	String domain=(rsAnn.getFeatures().get("Cont1")==null) ? "" : rsAnn.getFeatures().get("Cont1").toString();
+	//String text=(rsAnn.getFeatures().get("Cont1")==null) ? "" : rsAnn.getFeatures().get("Cont1").toString();
+	//domain+=(rsAnn.getFeatures().get("Cont2")==null) ? "" : rsAnn.getFeatures().get("Cont2").toString();
+	//domain+=(rsAnn.getFeatures().get("Cont3")==null) ? "" : rsAnn.getFeatures().get("Cont3").toString();
+	try{
+   
+   features.put("string",domain);
+   if ( rsAnn.getFeatures().get("Cont1Start") != null)
+		outputAS.add((Long)rsAnn.getFeatures().get("Cont1Start"), (Long)rsAnn.getFeatures().get("Cont1End"), "Quoted", features);
+   
+   }catch(Exception e1)
+   {System.out.println(e1.getMessage());}
+}

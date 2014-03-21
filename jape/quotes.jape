@@ -1,0 +1,163 @@
+Phase: quotes
+Input: Token Lookup Person ReportedSpeech RVG UniversityUnit Position University QuotedText Quoted
+Options: control = appelt
+
+//Quotes about a person
+
+Rule: Quote1
+(
+	
+	({Quoted contains Person })
+	
+):rule1
+-->
+{
+	gate.AnnotationSet pAnnots= (gate.AnnotationSet)bindings.get("rule1");
+	gate.Annotation rsAnn= (gate.Annotation)pAnnots.iterator().next();
+	gate.AnnotationSet reportAn=null;
+	gate.AnnotationSet reportAn2=null;
+	String personReport="";
+	String quoteReport="";
+	
+	reportAn=inputAS.get("Person",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	
+	reportAn2=inputAS.get("Quoted",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	try{		
+		personReport=doc.getContent().getContent(reportAn.iterator().next().getStartNode().getOffset(),reportAn.iterator().next().getEndNode().getOffset()).toString();
+		
+		quoteReport=doc.getContent().getContent(reportAn2.iterator().next().getStartNode().getOffset(),reportAn2.iterator().next().getEndNode().getOffset()).toString();
+		
+		}
+	catch ( Exception e)
+	{
+		System.out.println(e.getMessage());
+	}
+	
+	FeatureMap features = Factory.newFeatureMap();
+	features.put("Range", personReport);
+	features.put("Domain", quoteReport);
+	features.put("firedBy", "rule1");
+	outputAS.add(pAnnots.firstNode(),pAnnots.lastNode(),"IssuedAbout",features);
+}
+
+
+Rule: Quote2
+(	
+	({ Quoted contains UniversityUnit}):unit
+):rule2
+-->
+{
+	gate.AnnotationSet pAnnots= (gate.AnnotationSet)bindings.get("rule2");
+	gate.Annotation rsAnn= (gate.Annotation)pAnnots.iterator().next();
+	gate.AnnotationSet reportAn=null;
+	gate.AnnotationSet reportAn2=null;
+	String unitReport="";
+	String quoteReport="";
+	
+	reportAn=inputAS.get("UniversityUnit",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	
+	reportAn2=inputAS.get("Quoted",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	try{		
+		unitReport=doc.getContent().getContent(reportAn.iterator().next().getStartNode().getOffset(),reportAn.iterator().next().getEndNode().getOffset()).toString();
+		
+		quoteReport=doc.getContent().getContent(reportAn2.iterator().next().getStartNode().getOffset(),reportAn2.iterator().next().getEndNode().getOffset()).toString();
+		
+		}
+	catch ( Exception e)
+	{
+		System.out.println(e.getMessage());
+	}
+	
+	FeatureMap features = Factory.newFeatureMap();
+	features.put("Range", unitReport);
+	features.put("Domain", quoteReport);
+	features.put("firedBy", "rule2");
+	outputAS.add(pAnnots.firstNode(),pAnnots.lastNode(),"IssuedAbout",features);
+}
+
+Rule: Quote3
+(
+	{Quoted}
+	({Token.string == ","})?
+	({Token.string == "\""})?
+	{RVG}	
+	({Person}):person
+):rule3
+-->
+{
+	gate.AnnotationSet pAnnots= (gate.AnnotationSet)bindings.get("rule3");
+	gate.Annotation rsAnn= (gate.Annotation)pAnnots.iterator().next();
+	gate.AnnotationSet reportAn=null;
+	gate.AnnotationSet reportAn2=null;
+	String personReport="";
+	String quoteReport="";
+	
+	reportAn=inputAS.get("Person",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	
+	reportAn2=inputAS.get("Quoted",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	try{		
+		personReport=doc.getContent().getContent(reportAn.iterator().next().getStartNode().getOffset(),reportAn.iterator().next().getEndNode().getOffset()).toString();
+		
+		quoteReport=doc.getContent().getContent(reportAn2.iterator().next().getStartNode().getOffset(),reportAn2.iterator().next().getEndNode().getOffset()).toString();
+		
+		}
+	catch ( Exception e)
+	{
+		System.out.println(e.getMessage());
+	}
+	
+	FeatureMap features = Factory.newFeatureMap();
+	features.put("Domain", personReport);
+	features.put("Range", quoteReport);
+	features.put("firedBy", "rule3");
+	outputAS.add(pAnnots.firstNode(),pAnnots.lastNode(),"IssuedBy",features);
+}
+
+
+Rule: Quote4
+(
+	{Quoted}	
+	({Token.kind == "punctuation"})*	
+	({Person}):person
+	{RVG}
+):rule4
+-->
+{
+	gate.AnnotationSet pAnnots= (gate.AnnotationSet)bindings.get("rule4");
+	gate.Annotation rsAnn= (gate.Annotation)pAnnots.iterator().next();
+	gate.AnnotationSet reportAn=null;
+	gate.AnnotationSet reportAn2=null;
+	String personReport="";
+	String quoteReport="";
+	
+	reportAn=inputAS.get("Person",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	
+	reportAn2=inputAS.get("Quoted",pAnnots.firstNode().getOffset(),pAnnots.lastNode().getOffset());
+	try{		
+		personReport=doc.getContent().getContent(reportAn.iterator().next().getStartNode().getOffset(),reportAn.iterator().next().getEndNode().getOffset()).toString();
+		
+		quoteReport=doc.getContent().getContent(reportAn2.iterator().next().getStartNode().getOffset(),reportAn2.iterator().next().getEndNode().getOffset()).toString();
+		
+		}
+	catch ( Exception e)
+	{
+		System.out.println(e.getMessage());
+	}
+	
+	FeatureMap features = Factory.newFeatureMap();
+	features.put("Domain", personReport);
+	features.put("Range", quoteReport);
+	features.put("firedBy", "rule4");
+	outputAS.add(pAnnots.firstNode(),pAnnots.lastNode(),"IssuedBy",features);
+}
+
+Rule: Quote5
+(
+	({Quoted}):quote
+	({Token.string == ","})?
+	({Token.string == "\""})?
+	({Person}):person
+	{RVG}
+):rule5
+-->
+:rule5.IssuedBy = { Domain = :quote@string}

@@ -1,0 +1,46 @@
+Phase: Belongs_to_relation
+Input: Token Lookup Person
+Options: control = appelt
+
+Rule: Belongs_to1
+(
+	({Person}):person
+	{Token.string == ","}
+	({Lookup.minorType == university}):university
+):relName
+
+-->
+:relName.BelongsTo = {Domain=:person@string, Range=:university@string}
+
+
+//University of Toronto professor Andrew Munn said: "..."
+Rule: Belongs_to2
+(
+	({Lookup.minorType == university}):university
+	({Lookup.minorType == position})
+	({Person}):person
+):relName
+-->
+:relName.BelongsTo = {Domain=:person@string, Range=:university@string}
+
+// Andrew Munn professor at university of Toronto said:"..."
+Rule:Belongs_to3
+(
+	({Person}):person
+	({Lookup.minorType == position})
+	{Token.string == "at"}
+	({Lookup.minorType == university}):university
+):relName
+-->
+:relName.BelongsTo = {Domain=:person@string, Range=:university@string}
+
+//Anthropology professor Andrew Munn from University of Toronto
+Rule:Belongs_to4
+(
+	({Lookup.minorType == position})
+	({Person}):person
+	{Token.string ==~ "(?i)from"}
+	({Lookup.minorType == university}):university
+):relName
+-->
+:relName.BelongsTo = {Domain=:person@string, Range=:university@string}

@@ -1,0 +1,35 @@
+Phase: Has_position_relation
+Input: Token Lookup Person Position University
+Options: control = appelt
+
+//University of Toronto professor Andrew Munn said: "..."
+Rule: Has_position1
+(
+	({University}):university
+	({Position}):position
+	({Person}):person
+):relName
+-->
+:relName.HasPosition = {Domain=:person@string, Range=:position@string, firedby="Rule1"}
+
+// Andrew Munn professor at university of Toronto said:"..."
+Rule:Has_position2
+(
+	({Person}):person
+	({Position}):position
+	{Token.string == "at"}
+	({University}):university
+):relName
+-->
+:relName.HasPosition = {Domain=:person@string, Range=:position@string, firedby="Rule2"}
+
+//Anthropology professor Andrew Munn from University of Toronto
+Rule:Has_position3
+(
+	({Position}):position
+	({Person}):person
+	{Token.string ==~ "(?i)from"}
+	({University}):university
+):relName
+-->
+:relName.HasPosition = {Domain=:person@string, Range=:position@string, firedby="Rule3"}

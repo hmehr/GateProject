@@ -1,0 +1,14 @@
+Phase: Belongs_to_relation1
+Input: Token Lookup Person
+Options: control = appelt
+
+Rule: Belongs_to1
+(
+	({Person}):person
+	{Token.string == ","}
+	({Lookup.kind == university}):university
+):relName
+
+-->
+:relName.BelongsTo = {Domain=:person@string, Range=:university@string}
+
